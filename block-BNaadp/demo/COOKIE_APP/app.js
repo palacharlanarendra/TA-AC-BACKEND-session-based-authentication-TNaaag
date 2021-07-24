@@ -26,10 +26,7 @@ app.use('/users', usersRouter);
 app.use(function (req, res, next) {
   next(createError(404));
 });
-app.get('/signin', (req, res) => {
-  res.cookie('name', 'narendra');
-  res.send('cookie stored');
-});
+
 
 // error handler
 app.use(function (err, req, res, next) {
