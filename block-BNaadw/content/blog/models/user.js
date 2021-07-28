@@ -23,7 +23,9 @@ userSchema.pre('save', function (next) {
     next();
   }
 });
-
+userSchema.methods.fullName = function () {
+  return this.firstname + ' ' + this.lastname;
+};
 userSchema.methods.verifyPassword = function (password, cb) {
   bcrypt.compare(password, this.password, (err, result) => {
     return cb(err, result);

@@ -7,7 +7,8 @@
     <title>Blogs Form</title>
   </head>
   <body>
-    <form method="POST" action="/blog/<%= blog.id%>">
+    <%blog.forEach(blog=>{%>
+    <form method="POST" action="/blog/<%= blog.slug%>">
       <fieldset>
         <input
           name="title"
@@ -46,6 +47,7 @@
         />
         <input type="submit" value="Add blog article" />
       </fieldset>
+      <%})%>
     </form>
   </body>
 </html>

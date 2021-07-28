@@ -17,7 +17,13 @@ router.post('/register', (req, res, next) => {
 router.get('/login', function (req, res, next) {
   res.render('login');
 });
-
+router.get('/loginSuccess', function (req, res, next) {
+  let email = req.session.email;
+  User.findOne({ email }, (err, user) => {
+    var fullName = user.fullName();
+    res.render('loginSuccess', { fullName });
+  });
+});
 router.post('/login', (req, res, next) => {
   var { email, password } = req.body;
   console.log(email, password);
@@ -37,7 +43,8 @@ router.post('/login', (req, res, next) => {
         return res.redirect('/users/login');
       }
       req.session.userId = user.id;
-      res.redirect('/blog');
+      req.session.email = user.email;
+      res.redirect('/users/loginSuccess');
     });
   });
 });
