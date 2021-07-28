@@ -7,15 +7,17 @@
     <title>Document</title>
   </head>
   <body>
+    <%blog.forEach(blog=>{%>
+
     <p><%= blog.title%></p>
     <p><%= blog.description%></p>
     <p><%= blog.author%></p>
     <p><%= blog.tags%></p>
     <p><%= blog.likes%></p>
-    <a href="/blog/<%= blog.id%>/edit">
+    <a href="/blog/<%= blog.slug%>/edit">
       <button>Update info</button>
     </a>
-    <a href="/blog/<%= blog.id%>/delete">
+    <a href="/blog/<%= blog.slug%>/delete">
       <button>Delete info</button>
     </a>
     <a href="/blog/">
@@ -24,14 +26,14 @@
     <a href="/">
       <button>Home</button>
     </a>
-    <a href="/blog/<%= blog.id%>/likes">
+    <a href="/blog/<%= blog.slug%>/likes">
       <button>increase</button>
     </a>
-    <a href="/blog/<%= blog.id%>/dislikes">
+    <a href="/blog/<%= blog.slug%>/dislikes">
       <button>decrease</button>
     </a>
 
-    <form action="/blog/<%= blog.id%>/comments" method="POST">
+    <form action="/blog/<%= blog.slug%>/comments" method="POST">
       <fieldset>
         <textarea name="content"></textarea>
         <input type="submit" value="add" />
@@ -53,7 +55,6 @@
     <a href="/comment/<%= comment.id%>/delete">
       <button>delete</button>
     </a>
-    <%})%>
-    <script src="../javascripts/like.js"></script>
+    <%})%> <%})%>
   </body>
 </html>

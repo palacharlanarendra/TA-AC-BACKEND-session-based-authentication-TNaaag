@@ -9,7 +9,7 @@
   <body>
     <h2>my blogs</h2>
     <%blogs.forEach(blog=>{%>
-    <a href="/blog/<%= blog._id%>">
+    <a href="/blog/<%= blog.slug%>">
       <p><%= blog.title%></p>
     </a>
     <%})%>

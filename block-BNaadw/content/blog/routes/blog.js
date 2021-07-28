@@ -30,9 +30,9 @@ router.get('/new', function (req, res) {
 //     });
 //   });
 // });
-router.get('/:id', function (req, res, next) {
-  var id = req.params.id;
-  Blog.findById(id)
+router.get('/:slug', function (req, res, next) {
+  var slug = req.params.slug;
+  Blog.find({ slug: slug })
     .populate('comments')
     .exec((err, blog) => {
       if (err) return next(err);
@@ -40,16 +40,16 @@ router.get('/:id', function (req, res, next) {
     });
 });
 
-router.get('/:id/edit', function (req, res, next) {
-  var id = req.params.id;
-  Blog.findById(id, (err, blog) => {
+router.get('/:slug/edit', function (req, res, next) {
+  var slug = req.params.slug;
+  Blog.find({ slug }, (err, blog) => {
     if (err) return next(err);
     res.render('blogNewForm', { blog: blog });
   });
 });
-router.get('/:id/delete', function (req, res, next) {
-  var id = req.params.id;
-  Blog.findByIdAndDelete(id, (err, blog) => {
+router.get('/:slug/delete', function (req, res, next) {
+  var slug = req.params.slug;
+  Blog.remove({ slug }, (err, blog) => {
     if (err) return next(err);
     Comment.deleteMany({ blogId: blog.id }, (err, info) => {
       res.redirect('/blog');
@@ -63,30 +63,31 @@ router.post('/', (req, res, next) => {
     res.redirect('/blog');
   });
 });
-router.post('/:id', (req, res, next) => {
-  var id = req.params.id;
-  Blog.findByIdAndUpdate(id, req.body, (err, updateBlog) => {
+router.post('/:slug', (req, res, next) => {
+  var slug = req.params.slug;
+  Blog.findOneAndUpdate(slug, req.body, (err, updateBlog) => {
     if (err) return next(err);
-    res.redirect('/blog/' + id);
+    res.redirect('/blog/' + slug);
   });
 });
-router.post('/:id/comments', (req, res, next) => {
-  var id = req.params.id;
-  req.body.blogId = id;
+router.post('/:slug/comments', (req, res, next) => {
+  console.log(req.params);
+  var slug = req.params.slug;
+  req.body.blogId = slug;
   Comment.create(req.body, (err, comment) => {
-    Blog.findByIdAndUpdate(
-      id,
+    Blog.findOneAndUpdate(
+      slug,
       { $push: { comments: comment._id } },
       (err, updatedBlog) => {
-        console.log(err, comment);
+        console.log(err, updatedBlog);
         if (err) return next(err);
-        res.redirect('/blog/' + id);
+        res.redirect('/blog/' + slug);
       }
     );
   });
 });
 router.get('/:id/likes', (req, res, next) => {
-  var id = req.params.id;
+  var id = req.params.slug;
   Blog.findByIdAndUpdate(id, { $inc: { likes: 1 } }, (err, blog) => {
     console.log(err, blog);
     if (err) return next(err);
@@ -94,7 +95,7 @@ router.get('/:id/likes', (req, res, next) => {
   });
 });
 router.get('/:id/dislikes', (req, res, next) => {
-  var id = req.params.id;
+  var id = req.params.slug;
   Blog.findByIdAndUpdate(id, { $inc: { likes: -1 } }, (err, blog) => {
     console.log(err, blog);
     if (err) return next(err);
